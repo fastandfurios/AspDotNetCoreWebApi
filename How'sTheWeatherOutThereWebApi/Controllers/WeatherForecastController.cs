@@ -28,9 +28,9 @@ namespace HowsTheWeatherOutThereWebApi.Controllers
 		}
 
 		[HttpPut("edit")]
-		public IActionResult ChangeTheTemperatureOverTime([FromQuery] string time, [FromQuery] int newValueTemperature)
+		public IActionResult ChangeTheTemperatureOverTime([FromQuery] string time, [FromQuery] int newTemperature)
 		{
-			_forecast.ChangeDictionary(time, newValueTemperature);
+			_forecast.ChangeDictionary(time, newTemperature);
 			return Ok(_forecast.Temperatures);
 		}
 

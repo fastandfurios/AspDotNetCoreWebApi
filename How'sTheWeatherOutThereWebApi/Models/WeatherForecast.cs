@@ -15,13 +15,13 @@ namespace HowsTheWeatherOutThereWebApi.Models
 
 		public WeatherForecast() => _temperatures = new Dictionary<string, int>();
 
-		internal void ChangeDictionary(string time, int newValueTemperature)
+		internal void ChangeDictionary(string time, int newTemperature)
 		{
 			var changeDictionary = new Dictionary<string, int>();
 
 			foreach (var valuePair in _temperatures)
 			{
-				changeDictionary.Add(valuePair.Key, valuePair.Key == time ? newValueTemperature : valuePair.Value);
+				changeDictionary.Add(valuePair.Key, valuePair.Key == time ? newTemperature : valuePair.Value);
 			}
 
 			_temperatures.Clear();
