@@ -6,51 +6,59 @@ namespace HowsTheWeatherOutThereWebApi.Models
 {
 	public class WeatherForecast
 	{
-		private Dictionary<string, int> _temperatures;
-		public Dictionary<string, int> Temperatures
+		private Dictionary<DateTime, int> _temperatures;
+		public Dictionary<DateTime, int> Temperatures
 		{
 			get => _temperatures;
 			set => value = _temperatures;
 		}
 
-		public WeatherForecast() => _temperatures = new Dictionary<string, int>();
+		public WeatherForecast() => _temperatures = new Dictionary<DateTime, int>();
 
-		internal void ChangeDictionary(string time, int newTemperature)
+		internal void ChangeDictionary(DateTime time, int temperature)
 		{
-			var changeDictionary = new Dictionary<string, int>();
+			var changeDictionary = new Dictionary<DateTime, int>();
 
 			foreach (var valuePair in _temperatures)
 			{
-				changeDictionary.Add(valuePair.Key, valuePair.Key == time ? newTemperature : valuePair.Value);
+				changeDictionary.Add(valuePair.Key, valuePair.Key == time ? temperature : valuePair.Value);
 			}
 
 			_temperatures.Clear();
 			_temperatures = changeDictionary;
 		}
 
-		internal Dictionary<string, int> ReadRangeTimeWithTemperature(string lowTime, string upTime)
+		internal void DeleteRangeTimeWithTemperatures(DateTime lowTime, DateTime upTime)
 		{
-			var newDictionary = new Dictionary<string, int>();
+			var newDictionary = new Dictionary<DateTime, int>();
 
 			foreach (var pair in _temperatures)
 			{
-				if (pair.Key.Equals(upTime))
+				if (pair.Key < lowTime)
 				{
 					newDictionary.Add(pair.Key, pair.Value);
-					break;
 				}
 
-				newDictionary.Add(pair.Key, pair.Value);
+				if (pair.Key > upTime)
+				{
+					newDictionary.Add(pair.Key, pair.Value);
+				}
 			}
 
-			foreach (var pair in newDictionary)
-			{
-				if (pair.Key.Equals(lowTime))
-				{
-					break;
-				}
+			_temperatures.Clear();
+			_temperatures = newDictionary;
+		}
 
-				newDictionary.Remove(pair.Key);
+		internal Dictionary<DateTime, int> ReadRangeTimeWithTemperature(DateTime lowTime, DateTime upTime)
+		{
+			var newDictionary = new Dictionary<DateTime, int>();
+
+			foreach (var pair in _temperatures)
+			{
+				if (pair.Key >= lowTime && pair.Key <= upTime)
+				{
+					newDictionary.Add(pair.Key, pair.Value);
+				}
 			}
 
 			return newDictionary;
