@@ -6,18 +6,18 @@ namespace HowsTheWeatherOutThereWebApi.Models
 {
 	public class WeatherForecast
 	{
-		private Dictionary<DateTime, int> _temperatures;
-		public Dictionary<DateTime, int> Temperatures
+		private SortedDictionary<DateTime, int> _temperatures;
+		public SortedDictionary<DateTime, int> Temperatures
 		{
 			get => _temperatures;
 			set => value = _temperatures;
 		}
 
-		public WeatherForecast() => _temperatures = new Dictionary<DateTime, int>();
+		public WeatherForecast() => _temperatures = new SortedDictionary<DateTime, int>();
 
 		internal void ChangeDictionary(DateTime time, int temperature)
 		{
-			var changeDictionary = new Dictionary<DateTime, int>();
+			var changeDictionary = new SortedDictionary<DateTime, int>();
 
 			foreach (var valuePair in _temperatures)
 			{
@@ -30,7 +30,7 @@ namespace HowsTheWeatherOutThereWebApi.Models
 
 		internal void DeleteRangeTimeWithTemperatures(DateTime lowTime, DateTime upTime)
 		{
-			var newDictionary = new Dictionary<DateTime, int>();
+			var newDictionary = new SortedDictionary<DateTime, int>();
 
 			foreach (var pair in _temperatures)
 			{
@@ -49,9 +49,9 @@ namespace HowsTheWeatherOutThereWebApi.Models
 			_temperatures = newDictionary;
 		}
 
-		internal Dictionary<DateTime, int> ReadRangeTimeWithTemperature(DateTime lowTime, DateTime upTime)
+		internal SortedDictionary<DateTime, int> ReadRangeTimeWithTemperature(DateTime lowTime, DateTime upTime)
 		{
-			var newDictionary = new Dictionary<DateTime, int>();
+			var newDictionary = new SortedDictionary<DateTime, int>();
 
 			foreach (var pair in _temperatures)
 			{
