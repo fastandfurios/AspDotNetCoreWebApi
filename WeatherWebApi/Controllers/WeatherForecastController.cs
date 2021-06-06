@@ -24,5 +24,12 @@ namespace WeatherWebApi.Controllers
 			}
 			return Ok(_forecast.Temperatures);
 		}
+
+		[HttpPut("edit")]
+		public IActionResult ChangeTheTemperatureOverTime([FromQuery] DateTime time, [FromQuery] int temperature)
+		{
+			_forecast.ChangeDictionary(time, temperature);
+			return Ok(_forecast.Temperatures);
+		}
 	}
 }

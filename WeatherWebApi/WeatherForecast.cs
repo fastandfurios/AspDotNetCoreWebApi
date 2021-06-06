@@ -13,5 +13,18 @@ namespace WeatherWebApi
 		}
 
 		public WeatherForecast() => _temperatures = new SortedDictionary<DateTime, int>();
+
+		internal void ChangeDictionary(DateTime time, int temperature)
+		{
+			var changeDictionary = new SortedDictionary<DateTime, int>();
+
+			foreach (var valuePair in _temperatures)
+			{
+				changeDictionary.Add(valuePair.Key, valuePair.Key == time ? temperature : valuePair.Value);
+			}
+
+			_temperatures.Clear();
+			_temperatures = changeDictionary;
+		}
 	}
 }
