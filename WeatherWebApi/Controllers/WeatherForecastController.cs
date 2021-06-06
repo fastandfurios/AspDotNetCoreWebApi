@@ -8,8 +8,21 @@ using System.Threading.Tasks;
 namespace WeatherWebApi.Controllers
 {
 	[ApiController]
-	[Route("[controller]")]
+	[Route("api/[controller]")]
 	public class WeatherForecastController : ControllerBase
 	{
+		private readonly WeatherForecast _forecast;
+
+		public WeatherForecastController(WeatherForecast forecast) => _forecast = forecast;
+
+		[HttpPost("create")]
+		public IActionResult AddTemperature([FromQuery] DateTime time, [FromQuery] int temperature)
+		{
+			if (_forecast.Temperatures != null && !_forecast.Temperatures.ContainsKey(time))
+			{
+				_forecast.Temperatures.Add(time, temperature);
+			}
+			return Ok(_forecast.Temperatures);
+		}
 	}
 }
