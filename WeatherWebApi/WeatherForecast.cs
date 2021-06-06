@@ -47,5 +47,20 @@ namespace WeatherWebApi
 			_temperatures.Clear();
 			_temperatures = newDictionary;
 		}
+
+		internal SortedDictionary<DateTime, int> ReadRangeTimeWithTemperature(DateTime lowTime, DateTime upTime)
+		{
+			var newDictionary = new SortedDictionary<DateTime, int>();
+
+			foreach (var pair in _temperatures)
+			{
+				if (pair.Key >= lowTime && pair.Key <= upTime)
+				{
+					newDictionary.Add(pair.Key, pair.Value);
+				}
+			}
+
+			return newDictionary;
+		}
 	}
 }

@@ -44,5 +44,16 @@ namespace WeatherWebApi.Controllers
 			_forecast.DeleteRangeTimeWithTemperatures(lowTime, upTime);
 			return Ok(_forecast.Temperatures);
 		}
+
+		[HttpGet("read")]
+		public IActionResult Read([FromQuery] DateTime lowTime, [FromQuery] DateTime upTime)
+		{
+			if (lowTime > upTime)
+			{
+				return Ok(MessageError);
+			}
+
+			return Ok(_forecast.ReadRangeTimeWithTemperature(lowTime, upTime));
+		}
 	}
 }
