@@ -12,6 +12,7 @@ namespace WeatherWebApi.Controllers
 	public class WeatherForecastController : ControllerBase
 	{
 		private readonly WeatherForecast _forecast;
+		private const string MessageError = "Неверно были заданы границы временного интервала! Повторите запрос";
 
 		public WeatherForecastController(WeatherForecast forecast) => _forecast = forecast;
 
@@ -29,6 +30,18 @@ namespace WeatherWebApi.Controllers
 		public IActionResult ChangeTheTemperatureOverTime([FromQuery] DateTime time, [FromQuery] int temperature)
 		{
 			_forecast.ChangeDictionary(time, temperature);
+			return Ok(_forecast.Temperatures);
+		}
+
+		[HttpDelete("delete")]
+		public IActionResult DeleteTemperature([FromQuery] DateTime lowTime, [FromQuery] DateTime upTime)
+		{
+			if (lowTime > upTime)
+			{
+				return Ok(MessageError);
+			}
+
+			_forecast.DeleteRangeTimeWithTemperatures(lowTime, upTime);
 			return Ok(_forecast.Temperatures);
 		}
 	}

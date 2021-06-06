@@ -26,5 +26,26 @@ namespace WeatherWebApi
 			_temperatures.Clear();
 			_temperatures = changeDictionary;
 		}
+
+		internal void DeleteRangeTimeWithTemperatures(DateTime lowTime, DateTime upTime)
+		{
+			var newDictionary = new SortedDictionary<DateTime, int>();
+
+			foreach (var pair in _temperatures)
+			{
+				if (pair.Key < lowTime)
+				{
+					newDictionary.Add(pair.Key, pair.Value);
+				}
+
+				if (pair.Key > upTime)
+				{
+					newDictionary.Add(pair.Key, pair.Value);
+				}
+			}
+
+			_temperatures.Clear();
+			_temperatures = newDictionary;
+		}
 	}
 }
