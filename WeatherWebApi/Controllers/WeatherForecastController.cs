@@ -29,7 +29,7 @@ namespace WeatherWebApi.Controllers
 		[HttpPut("edit")]
 		public IActionResult ChangeTheTemperatureOverTime([FromQuery] DateTime time, [FromQuery] int temperature)
 		{
-			_forecast.ChangeDictionary(time, temperature);
+			_forecast.Temperatures[time] = temperature;
 			return Ok(_forecast.Temperatures);
 		}
 
