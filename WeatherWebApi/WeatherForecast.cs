@@ -6,24 +6,24 @@ namespace WeatherWebApi
 {
 	public class WeatherForecast
 	{
-		public List<Values> List { get; private set; }
+		public List<Values> ListTemperaturesTime { get; private set; }
 
 		public WeatherForecast()
 		{
-			List = new List<Values>();
+			ListTemperaturesTime = new List<Values>();
 		}
 
 		internal void AddValues(DateTime time, int temperature)
 		{
-			if (List != null && !List.Contains(new Values { Temperature = temperature, Time = time }))
+			if (ListTemperaturesTime != null && !ListTemperaturesTime.Contains(new Values { Temperature = temperature, Time = time }))
 			{
-				List.Add(new Values { Temperature = temperature, Time = time });
-				List.Sort(((values, values1) => values.Time.CompareTo(values1.Time)));
+				ListTemperaturesTime.Add(new Values { Temperature = temperature, Time = time });
+				ListTemperaturesTime.Sort(((values, values1) => values.Time.CompareTo(values1.Time)));
 			}
 		}
 
 		internal void ChangeValues(DateTime time, int temperature)
-			=> List = List.Select(s =>
+			=> ListTemperaturesTime = ListTemperaturesTime.Select(s =>
 				{
 					if (s.Time == time)
 					{
@@ -34,10 +34,10 @@ namespace WeatherWebApi
 				}).ToList();
 
 		internal void DeleteRangeTimeWithTemperatures(DateTime lowTime, DateTime upTime)
-			=> List = List.Where(values => values.Time < lowTime || values.Time > upTime).ToList();
+			=> ListTemperaturesTime = ListTemperaturesTime.Where(values => values.Time < lowTime || values.Time > upTime).ToList();
 		
 
 		internal IEnumerable<Values> ReadRangeTimeWithTemperature(DateTime lowTime, DateTime upTime)
-			=> List.Where(values => values.Time >= lowTime && values.Time <= upTime);
+			=> ListTemperaturesTime.Where(values => values.Time >= lowTime && values.Time <= upTime);
 	}
 }

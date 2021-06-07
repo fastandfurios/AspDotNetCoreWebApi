@@ -20,14 +20,14 @@ namespace WeatherWebApi.Controllers
 		public IActionResult AddTemperature([FromQuery] DateTime time, [FromQuery] int temperature)
 		{
 			_forecast.AddValues(time, temperature);
-			return Ok(_forecast.List);
+			return Ok(_forecast.ListTemperaturesTime);
 		}
 
 		[HttpPut("edit")]
 		public IActionResult ChangeTheTemperatureOverTime([FromQuery] DateTime time, [FromQuery] int temperature)
 		{
 			_forecast.ChangeValues(time, temperature);
-			return Ok(_forecast.List);
+			return Ok(_forecast.ListTemperaturesTime);
 		}
 
 		[HttpDelete("delete")]
@@ -39,7 +39,7 @@ namespace WeatherWebApi.Controllers
 			}
 
 			_forecast.DeleteRangeTimeWithTemperatures(lowTime, upTime);
-			return Ok(_forecast.List);
+			return Ok(_forecast.ListTemperaturesTime);
 		}
 
 		[HttpGet("read")]
