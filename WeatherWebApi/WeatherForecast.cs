@@ -6,35 +6,38 @@ namespace WeatherWebApi
 {
 	public class WeatherForecast
 	{
-		private SortedDictionary<DateTime, int> _temperatures;
-		public SortedDictionary<DateTime, int> Temperatures
-		{
-			get => _temperatures;
-			set => value = _temperatures;
-		}
+		public List<Values> List { get; private set; }
 
 		public WeatherForecast()
 		{
-			_temperatures = new SortedDictionary<DateTime, int>();
+			List = new List<Values>();
 		}
+
+		internal void AddValues(DateTime time, int temperature)
+		{
+			if (List != null && !List.Contains(new Values { Temperature = temperature, Time = time }))
+			{
+				List.Add(new Values { Temperature = temperature, Time = time });
+				List.Sort(((values, values1) => values.Time.CompareTo(values1.Time)));
+			}
+		}
+
+		internal void ChangeValues(DateTime time, int temperature)
+			=> List = List.Select(s =>
+				{
+					if (s.Time == time)
+					{
+						s.Temperature = temperature;
+					}
+
+					return s;
+				}).ToList();
 
 		internal void DeleteRangeTimeWithTemperatures(DateTime lowTime, DateTime upTime)
-		{
-			var newDictionary = new SortedDictionary<DateTime, int>();
+			=> List = List.Where(values => values.Time < lowTime || values.Time > upTime).ToList();
+		
 
-			foreach (var pair in _temperatures)
-			{
-				if (pair.Key < lowTime || pair.Key > upTime)
-				{
-					newDictionary.Add(pair.Key, pair.Value);
-				}
-			}
-
-			_temperatures.Clear();
-			_temperatures = newDictionary;
-		}
-
-		internal IEnumerable<KeyValuePair<DateTime, int>> ReadRangeTimeWithTemperature(DateTime lowTime, DateTime upTime)
-			=> _temperatures.Where(pair => pair.Key >= lowTime && pair.Key <= upTime);
+		internal IEnumerable<Values> ReadRangeTimeWithTemperature(DateTime lowTime, DateTime upTime)
+			=> List.Where(values => values.Time >= lowTime && values.Time <= upTime);
 	}
 }
