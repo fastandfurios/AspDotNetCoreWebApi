@@ -8,32 +8,49 @@ using System.Threading.Tasks;
 namespace WeatherWebApi.Controllers
 {
 	[ApiController]
-	[Route("[controller]")]
+	[Route("api/[controller]")]
 	public class WeatherForecastController : ControllerBase
 	{
-		private static readonly string[] Summaries = new[]
-		{
-			"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-		};
+		private readonly WeatherForecast _forecast;
+		private const string MessageError = "Неверно были заданы границы временного интервала! Повторите запрос";
 
-		private readonly ILogger<WeatherForecastController> _logger;
+		public WeatherForecastController(WeatherForecast forecast) => _forecast = forecast;
 
-		public WeatherForecastController(ILogger<WeatherForecastController> logger)
+		[HttpPost("create")]
+		public IActionResult AddTemperature([FromQuery] DateTime time, [FromQuery] int temperature)
 		{
-			_logger = logger;
+			_forecast.AddValues(time, temperature);
+			return Ok(_forecast.ListTemperaturesTime);
 		}
 
-		[HttpGet]
-		public IEnumerable<WeatherForecast> Get()
+		[HttpPut("edit")]
+		public IActionResult ChangeTheTemperatureOverTime([FromQuery] DateTime time, [FromQuery] int temperature)
 		{
-			var rng = new Random();
-			return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+			_forecast.ChangeValues(time, temperature);
+			return Ok(_forecast.ListTemperaturesTime);
+		}
+
+		[HttpDelete("delete")]
+		public IActionResult DeleteTemperature([FromQuery] DateTime lowTime, [FromQuery] DateTime upTime)
+		{
+			if (lowTime > upTime)
 			{
-				Date = DateTime.Now.AddDays(index),
-				TemperatureC = rng.Next(-20, 55),
-				Summary = Summaries[rng.Next(Summaries.Length)]
-			})
-			.ToArray();
+				return Ok(MessageError);
+			}
+
+			_forecast.DeleteRangeTimeWithTemperatures(lowTime, upTime);
+			return Ok(_forecast.ListTemperaturesTime);
+		}
+
+		[HttpGet("read")]
+		public IActionResult Read([FromQuery] DateTime lowTime, [FromQuery] DateTime upTime)
+		{
+			if (lowTime > upTime)
+			{
+				return Ok(MessageError);
+			}
+
+			return Ok(_forecast.ReadRangeTimeWithTemperature(lowTime, upTime));
 		}
 	}
 }
